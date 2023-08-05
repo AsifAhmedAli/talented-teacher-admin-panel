@@ -8,8 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <title>SB Admin 2 - Tables</title>
+    <title>Admin Panel</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -47,10 +48,15 @@
 
         
             <li class="nav-item active">
-              <a class="nav-link" href="dashboard.html">
+              <a class="nav-link" href="index.html">
                   <!-- <i class="fas fa-fw fa-table"></i> -->
                   <span>Dashboard</span></a>
           </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="contest_details.html">
+                <!-- <i class="fas fa-fw fa-table"></i> -->
+                <span>Contest Details</span></a>
+        </li>
           
 
             <!-- Nav Item - Tables -->
@@ -59,6 +65,22 @@
                     <!-- <i class="fas fa-fw fa-table"></i> -->
                     <span>All Teachers</span></a>
             </li>
+
+            <li class="nav-item active">
+              <a class="nav-link" href="tickets.html">
+                  <!-- <i class="fas fa-fw fa-table"></i> -->
+                  <span>Support tickets</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="send_email.html">
+                    <!-- <i class="fas fa-fw fa-table"></i> -->
+                    <span>Send Email</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="chat.html">
+                    <!-- <i class="fas fa-fw fa-table"></i> -->
+                    <span>Chat</span></a>
+              </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -85,38 +107,29 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800 mt-3 mb-5">Dashboard</h1>
 
-                    <div class="d-flex">
-                        <h4 id="registrationHeading" class="pr-3">Turn Registration Off</h4>
-                        <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" id="registrationToggleSwitch">
+                    <div class="col-12 text-center">
+                        <h4 id="registrationHeading" >Support Tickets</h4>
+                        <br>
+                        <hr>
+                        <div class="row">
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Full Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Message</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="tbody">
 
-                        
-                            
+                                </tbody>
+                              </table>
+                        </div>    
                     </div>
-                    <div class="d-flex mt-5 pt-5">
-                        <h4 id="doubleVoteHeading" class="pr-3">Turn Double Vote On</h4>
-                        <input type="checkbox" id="doubleVoteToggleSwitch" data-toggle="toggle" data-on="On" data-off="Off" data-onstyle="primary" data-offstyle="secondary">
-                      </div>
-                      
-                    
-
-                      
-
                 </div>
                 <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <!-- <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer> -->
-            <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
@@ -170,74 +183,35 @@
     <script src="./js/all.js"></script>
 
     <script>
-$('#registrationToggleSwitch').bootstrapToggle({
-  on: 'On',
-  off: 'Off',
-  onstyle: 'primary',
-  offstyle: 'secondary'
-});
+// 
 
-$('#registrationToggleSwitch').change(function() {
-  var newState = $(this).prop('checked') ? 'on' : 'off';
 
-  document.getElementById("loader1").style.visibility = "visible"; // Show the loader
-
+document.getElementById("loader1").style.visibility = "visible"; // Show the loader
+    // var newState = "on";
   $.ajax({
-    type: "post",
-    url: `${baseurl}/admin/toggle-registration`,
-    data: { state: newState },
+    type: "get",
+    url: `${baseurl}/admin/fetch-tickets`,
     success: function(response) {
-        console.log(response)
-      document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+      console.log(response)
+    var i = 1;
+    response.response.forEach(element => {
+        document.getElementById("tbody").innerHTML += `
+    <tr>
+                                    <th scope="row">${i}</th>
+                                    <td>${element.fullname}</td>
+                                    <td>${element.email}</td>
+                                    <td>${element.message}</td>
+                                  </tr>`;        
+                                  i++;
+    });
 
-      // Update the heading text based on the state
-      var headingText = response.enabled === "on" ? "Turn Registration Off" : "Turn Registration On";
-      $("#registrationHeading").text(headingText);
-    },
-    error: function(response) {
-      console.log(response);
-      document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
-    },
-  });
+    document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+  },
+  error: function(response) {
+    console.log(response);
+    document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+  },
 });
-
-
-
-
-// Double vote on/off API integration
-
-$('#doubleVoteToggleSwitch').bootstrapToggle({
-  on: 'On',
-  off: 'Off',
-  onstyle: 'primary',
-  offstyle: 'secondary'
-});
-
-$('#doubleVoteToggleSwitch').change(function() {
-  var newState = $(this).prop('checked') ? 'on' : 'off';
-
-  document.getElementById("loader1").style.visibility = "visible"; // Show the loader
-
-  $.ajax({
-    type: "post",
-    url: `${baseurl}/admin/toggle-double-vote`,
-    data: { state: newState },
-    success: function(response) {
-        console.log(response)
-      document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
-
-      // Update the heading text based on the state
-      var headingText = response.enabled === "on" ? "Turn Double Vote Off" : "Turn Double Vote On";
-      $("#doubleVoteHeading").text(headingText);
-    },
-    error: function(response) {
-      console.log(response);
-      document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
-    },
-  });
-});
-
-
     </script>
 
 </body>

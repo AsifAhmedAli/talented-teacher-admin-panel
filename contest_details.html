@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Admin Panel</title>
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    Talented Teacher
+                </div>
+               
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+
+        
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">
+                  <!-- <i class="fas fa-fw fa-table"></i> -->
+                  <span>Dashboard</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="contest_details.html">
+                <!-- <i class="fas fa-fw fa-table"></i> -->
+                <span>Contest Details</span></a>
+        </li>
+          
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item active">
+                <a class="nav-link" href="all_teachers.html">
+                    <!-- <i class="fas fa-fw fa-table"></i> -->
+                    <span>All Teachers</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="tickets.html">
+                  <!-- <i class="fas fa-fw fa-table"></i> -->
+                  <span>Support tickets</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="send_email.html">
+                  <!-- <i class="fas fa-fw fa-table"></i> -->
+                  <span>Send Email</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="chat.html">
+                  <!-- <i class="fas fa-fw fa-table"></i> -->
+                  <span>Chat</span></a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+              
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800 mt-3 mb-5">Contest Details</h1>
+                    <div  id="new_contest_section">
+                    <div class="col-12 text-center">
+                        <h4 id="registrationHeading" >Contest Status</h4>
+                        <br>
+                        <hr>
+                        <div>
+                            <h5 class="text-gray-800 text-center">Expected Phases Based on number of users => <span id="number_of_phases"></span></h5>
+                            <!-- <button class="mx-auto btn btn-outline-primary" onclick="regoff()" id="regoff">Turn Registration off</button> -->
+                        </div>    
+                    </div>
+                    <hr>
+                    <div class="col-12 text-center mt-5">
+                        <h4 id="registrationHeading" >Setup New Contest</h4>
+                        <br>
+                        <hr>
+                        <!-- <div class="row"> -->
+                            <button class=" mx-auto btn btn-primary mb-4" onclick="start_new_contest()" id="start_contest_button">Setup new Contest</button>
+                            <!-- <button class="mx-auto btn btn-outline-primary" onclick="dblvoteoff()" id="dblvoteoff">Turn Double Voting off</button> -->
+                        <!-- </div>     -->
+                    </div>
+                </div>
+                    <form id="setup_contest_form">
+                    <div id="table_area">
+                        
+                    </div>
+                </form>
+
+                </div>
+                <div class="container-fluid" id="else">
+                    <div class="col-12 text-center">
+                        <h4 id="registrationHeading" >Contest Status</h4>
+                        <br>
+                        <hr>
+                        <div>
+                            <h5 class="text-gray-800 text-center">Current Phase:  <span id="current_phase"></span></h5>
+                            <!-- <button class="mx-auto btn btn-outline-primary" onclick="regoff()" id="regoff">Turn Registration off</button> -->
+                        </div>    
+                        <hr>
+                        <h5 class="text-gray-800 text-center">Start Next Phase</h5>
+                        <button class="mx-auto btn btn-outline-primary" onclick="nextphase()">Start Next Phase</button>
+                    
+                    </div>
+                    <hr>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <!-- <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer> -->
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+    <div class="loading" id="loader1" style="visibility: hidden;">Loading&#8230;</div>
+    <!-- base url file -->
+    <script src="./js/all.js"></script>
+
+    <script>
+// function regon(){
+//     document.getElementById("loader1").style.visibility = "visible"; // Show the loader
+//     var newState = "on";
+// $.ajax({
+//   type: "post",
+//   url: `${baseurl}/admin/toggle-registration`,
+//   data: { state: newState },
+//   success: function(response) {
+//     //   console.log(response)
+//     Swal.fire({
+//         icon: "success",
+//         title: "Successful!",
+//         text: "Status updated successfully!",
+//         // allowOutsideClick: false,
+//       });
+//       $("button.swal2-confirm").click(function () {
+//         location.reload();
+//       });
+//     document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+//   },
+//   error: function(response) {
+//     console.log(response);
+//     document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+//   },
+// });
+// }
+
+
+
+
+
+// function dblvoteon(){
+//     document.getElementById("loader1").style.visibility = "visible"; // Show the loader
+//     var newState = "on";
+//   $.ajax({
+//     type: "post",
+//     url: `${baseurl}/admin/toggle-double-vote`,
+//     data: { state: newState },
+//     success: function(response) {
+//     //   console.log(response)
+//     Swal.fire({
+//         icon: "success",
+//         title: "Successful!",
+//         text: "Status updated successfully!",
+//         // allowOutsideClick: false,
+//       });
+//       $("button.swal2-confirm").click(function () {
+//         location.reload();
+//       });
+//     document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+//   },
+//   error: function(response) {
+//     console.log(response);
+//     document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+//   },
+// });
+// }
+
+
+
+function nextphase(){
+    document.getElementById("loader1").style.visibility = "visible"; // Show the loader
+    // var newState = "off";
+  $.ajax({
+    type: "get",
+    url: `${baseurl}/admin/contest-next-phase`,
+    success: function(response) {
+    //   console.log(response)
+    Swal.fire({
+        icon: "success",
+        title: "Successful!",
+        text: "Next Phase Started successfully!",
+        // allowOutsideClick: false,
+      });
+      $("button.swal2-confirm").click(function () {
+        location.reload();
+      });
+    document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+  },
+  error: function(response) {
+    console.log(response);
+    document.getElementById("loader1").style.visibility = "hidden"; // Hide the loader
+  },
+});
+}
+// 
+$.ajax({
+    type: "get",
+    url: `${baseurl}/admin/check-tournament-status`,
+    success: function (response) {
+      console.log(response)
+      if(response.msg != "Contest Ended"){
+          document.getElementById("new_contest_section").classList.add("d-none")
+        document.getElementById("current_phase").innerText = response.Current_phase;
+      }
+      else{
+        document.getElementById("else").classList.add("d-none")
+      }
+      document.getElementById("loader1").style.visibility = "hidden";
+    },
+
+    error: function (response) {
+      document.getElementById("loader1").style.visibility = "hidden";
+        console.log(response);
+    },
+  });
+
+
+function start_new_contest(){
+    document.getElementById("table_area").innerHTML = `
+    <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Phases</th>
+                                <th scope="col">Phase End Date</th>
+                                <!-- <th scope="col">Handle</th> -->
+                              </tr>
+                            </thead>
+                            <tbody id="phases_details">
+                                
+                            </tbody>
+                          </table>
+                          <div class="col-12 text-center">
+                            <button type="submit" class=" mx-auto btn btn-primary mb-4">Start Contest</button>
+                            </div>
+                          
+    `;
+                                var number_of_phases = document.getElementById("number_of_phases").innerText;
+                                for(i = 1; i <= number_of_phases; i++ ){
+                                    document.getElementById("phases_details").innerHTML += `<tr>
+                                    <th scope="row">${i}</th>
+                                    <td>Phase ${i}</td>
+                                    <td><div class="form-group">
+    <input type="date" id="enddate_${i}" required class="form-control" placeholder="Enter End Date">
+  </div></td>
+                                </tr>`;
+                                }
+}
+
+
+
+
+$("#setup_contest_form").submit(function (event) {
+  // Prevent default form submission
+  event.preventDefault();
+  var inputs = document.forms["setup_contest_form"].getElementsByTagName("input");
+//   console.log(inputs.length)
+var data;  
+var myobject = {};
+var current_phase, enddate;
+var coutn = 1;
+for(j = 0; j < inputs.length; j++){
+    current_phase = `Phase ${coutn}`;
+    
+        myobject[current_phase] = inputs[j].value;
+        coutn++;
+    // myobject.push(inputs[j].value);
+  }
+// data.push(myobject);  
+//   console.log(myobject)
+
+// console.log(myobject)
+//   var form = new FormData(this);
+  document.getElementById("loader1").style.visibility = "visible";
+  $.ajax({
+    type: "POST",
+    url: `${baseurl}/admin/start-contest-1`,
+    data: myobject,
+    success: function (response) {
+      console.log(response)
+      document.getElementById("loader1").style.visibility = "hidden";
+      Swal.fire({
+        icon: "success",
+        title: "Successful!",
+        text: response.message,
+        // allowOutsideClick: false,
+      });
+      $("button.swal2-confirm").click(function () {
+        location.reload();
+      });
+    },
+
+    error: function (response) {
+      document.getElementById("loader1").style.visibility = "hidden";
+      //   console.log(response.responseJSON.error);
+      if (response.responseJSON.error == "Email already registered") {
+        Swal.fire({
+          title: "Error!",
+          text: "Email Already Registered",
+          icon: "error",
+        });
+      }
+      //   if (response.status == 500) {
+      //     Swal.fire({
+      //       title: "Sign Up Failed!",
+      //       text: response.responseJSON.message,
+      //       icon: "error",
+      //     });
+      //   }
+    },
+  });
+});
+
+
+document.getElementById("loader1").style.visibility = "visible";
+$.ajax({
+  type: "get",
+  url: `${baseurl}/admin/start-contest`,
+  success: function (response) {
+    
+        // console.log(response);
+        // number_of_phases
+        document.getElementById("number_of_phases").innerHTML = response.number_of_phases;
+        // document.getElementById("regon").disabled = true;
+    document.getElementById("loader1").style.visibility = "hidden";
+  },
+
+  error: function (response) {
+    console.log(response);
+    document.getElementById("loader1").style.visibility = "hidden";
+  },
+});
+
+
+
+
+
+
+
+
+
+
+
+
+// document.getElementById("loader1").style.visibility = "visible";
+// $.ajax({
+//   type: "get",
+//   url: `${baseurl}/admin/check-doutle-vote-status`,
+//   success: function (response) {
+//     console.log(response.response)
+//     if (response.response[0].double_vote_on_off == "on") {
+//         // console.log(response);
+//         document.getElementById("dblvoteoff").disabled = false;
+//         document.getElementById("dblvoteon").disabled = true;
+//     } else {
+//         document.getElementById("dblvoteoff").disabled = true;
+//         document.getElementById("dblvoteon").disabled = false;
+//         // document.getElementById("registrationToggleSwitch").value = "Off";
+//         // document.getElementById("registrationToggleSwitch").checked = false;
+//         // console.log(document.getElementById("registrationToggleSwitch").value);
+//     }
+//     document.getElementById("loader1").style.visibility = "hidden";
+//   },
+
+//   error: function (response) {
+//     console.log(response);
+//     document.getElementById("loader1").style.visibility = "hidden";
+//   },
+// });
+    </script>
+
+</body>
+
+</html>
