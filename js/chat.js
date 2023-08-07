@@ -71,16 +71,38 @@ function fetchVoters() {
 
 // Function to create a new chat room
 function createNewChat() {
-    var chatroomName = $("#chatroomName").val().trim();
+    
+    // Get the token from localStorage
+    const token = localStorage.getItem("token");
+  
+    // Decode the token to retrieve the payload
+    const tokenPayload = token.split(".")[1];
+    const decodedPayload = JSON.parse(atob(tokenPayload));
+    // console.log(decodedPayload);
+  
+    // Extract the admin_id from the decoded payload
+    const admin_id = decodedPayload.id; 
+
+
+
+  var chatroomName = $("#chatroomName").val().trim();
+  var allVoters = $('#selectAllTeachers').prop('checked');
     var selectedVoters = $('input[name="voter"]:checked')
       .map(function () {
         return parseInt($(this).val());
       })
       .get();
-  
-    // Check if "Select All" checkbox is checked
-    var allVoters = $("#selectAllCheckbox").prop("checked");
-  
+ 
+
+    // Append admin_id to the formData
+        const formData = {
+          room_name: $("#chatroomName").val().trim(),
+          allVoters: $('#selectAllTeachers').prop('checked'),
+          selectedVoters: $('input[name="voter"]:checked').map(function() {
+            return this.value;
+          }).get(),
+          admin_id: admin_id
+        };
     // Perform validation on chatroomName and selectedVoters if required
     if (!chatroomName || selectedVoters.length === 0) {
       // Return an error if any field is left empty
@@ -94,30 +116,13 @@ function createNewChat() {
       return;
     }
   
-    // Get admin_id from the token stored in localStorage
-    // Get the token from localStorage
-    const token = localStorage.getItem("token");
   
-    // Decode the token to retrieve the payload
-    const tokenPayload = token.split(".")[1];
-    const decodedPayload = JSON.parse(atob(tokenPayload));
-    // console.log(decodedPayload);
-  
-    // Extract the admin_id from the decoded payload
-    const admin_id = decodedPayload.id; // Update 'id' to the correct property name if needed
-    // console.log(admin_id);
-  
-    // Code to send the data to your backend API to create a new chat
+    // Code to send the data 
     $.ajax({
       url: `${baseurl}/admin/new-chat-room`,
       type: "POST",
-      data: {
-        admin_id: admin_id,
-        room_name: chatroomName,
-        allVoters: allVoters,
-        selectedVoters: selectedVoters,
-      },
-      dataType: "json",
+      data: JSON.stringify(formData),
+      contentType: 'application/json',
       headers: {
         Authorization: "Bearer " + token, 
       },
@@ -147,7 +152,7 @@ function createNewChat() {
       },
     });
   }
-  
+
 
 $(document).ready(function () {
   // Attach click event handler to the "New Chat" button
