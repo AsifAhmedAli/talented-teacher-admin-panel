@@ -23,6 +23,10 @@
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <!-- Quill Editor CDN for styles -->
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <!-- sweetalert2 cdn -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -179,7 +183,10 @@
                             </div>
                             <div class="form-group">
                               <label for="message">Message</label>
-                              <textarea class="form-control" id="message" name="message" rows="4" autocomplete="off" required></textarea>
+                              <!-- <textarea class="form-control" id="message" name="message" rows="4" autocomplete="off" required></textarea> -->
+                              <div id="message" style="min-height: 150px;"></div>
+                            </div>
+
                             </div>
                             <div class="form-group ml-4">
                               <label for="attachments">Attachments</label>
@@ -262,7 +269,9 @@
     <!-- send_email.js file -->
     <script src="./js/send_email.js"></script>
 
-        <!-- Include the Quill library -->
+    <!-- Quill Editor CDN js -->
+
+    <!-- Include the Quill library -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 
