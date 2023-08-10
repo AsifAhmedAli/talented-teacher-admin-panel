@@ -337,143 +337,206 @@ function fetchChatRoomMessages(chatRoomID) {
 
 
 
-// Function to send a message to the backend API
+
+
+
 function sendMessage(chatroomID, message) {
   // Get the sender_id from the token stored in localStorage
   const token = localStorage.getItem("token");
   const tokenPayload = token.split(".")[1];
   const decodedPayload = JSON.parse(atob(tokenPayload));
   const sender_id = decodedPayload.id;
-  console.log(sender_id);
+
+  // Get the message input field
+  const messageInput = document.getElementById("messageInput");
+  const sendMessageBtn = document.getElementById("sendMessageBtn");
+
+  // Validate the message before sending
+  if (!message || message.trim() === "") {
+    // Add Bootstrap class to show red border
+    messageInput.classList.add("is-invalid");
+
+    // Set focus on the message input field
+    messageInput.focus();
+
+    return; // Exit the function if the message is blank
+  } else {
+    // Remove the Bootstrap class if the message is filled
+    messageInput.classList.remove("is-invalid");
+  }
+
+  // Disable the "Send" button and change its text to "Sending"
+  sendMessageBtn.disabled = true;
+  sendMessageBtn.textContent = "Sending...";
 
   // Code to send the data to your backend API to send a new message
-  $.ajax({
-    url: `${baseurl}/send-message`,
-    type: "POST",
-    data: {
+  fetch(`${baseurl}/send-message`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       sender_id: sender_id,
       chatroomID: chatroomID,
       message: message,
-   
-    },
-    dataType: "json",
-    headers: {
-      Authorization: "Bearer " + token, 
-    },
-    success: function (response) {
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to send message.");
+      }
+      return response.json();
+    })
+    .then((data) => {
       // Handle the success response
-    //   console.log("Message sent successfully:", response.message);
-      // Fetch chat room messages again to update the chat box with the new message
       fetchChatRoomMessages(chatroomID);
-      console.log(chatroomID)
-    },
-    error: function (error) {
+
+      // Re-enable the "Send" button and change its text back to "Send"
+      sendMessageBtn.disabled = false;
+      sendMessageBtn.textContent = "Send";
+    })
+    .catch((error) => {
       // Handle the error response
-      console.log("Failed to send message:", error);
-    },
-  });
+      console.error("Failed to send message:", error);
+
+      // Re-enable the "Send" button and change its text back to "Send"
+      sendMessageBtn.disabled = false;
+      sendMessageBtn.textContent = "Send";
+    });
 }
 
+// Add event listener for "input" event to remove error when user types in the textarea
+document.getElementById("messageInput").addEventListener("input", function () {
+  const messageInput = this;
+  if (messageInput.value && messageInput.value.trim() !== "") {
+    messageInput.classList.remove("is-invalid");
+  }
+});
 
 
 
 
 
-// Function to send a message to the backend API
-function sendAttachment(chatroomID,files,messag) {
-    // Get the sender_id from the token stored in localStorage
-    const token = localStorage.getItem("token");
-    const tokenPayload = token.split(".")[1];
-    const decodedPayload = JSON.parse(atob(tokenPayload));
-    const sender_id = decodedPayload.id;
-    // console.log(sender_id);
+// send message with attachments
 
-     // Create a new FormData object to include the message and file data
+function sendAttachment(chatroomID, files, message) {
+  // Get the sender_id from the token stored in localStorage
+  const token = localStorage.getItem("token");
+  const tokenPayload = token.split(".")[1];
+  const decodedPayload = JSON.parse(atob(tokenPayload));
+  const sender_id = decodedPayload.id;
+
+  // Get the message input field
+  const messageInput = document.getElementById("messageInput");
+  const sendMessageBtn = document.getElementById("sendMessageBtn"); 
+
+  // Validate the message before sending
+  if (!message || message.trim() === "") {
+    // Add Bootstrap class to show red border
+    messageInput.classList.add("is-invalid");
+
+    // Set focus on the message input field
+    messageInput.focus();
+
+    return; // Exit the function if the message is blank
+  } else {
+    // Remove the Bootstrap class if the message is filled
+    messageInput.classList.remove("is-invalid");
+  }
+
+  // Disable the "Send" button and change its text to "Sending"
+  sendMessageBtn.disabled = true;
+  sendMessageBtn.textContent = "Sending...";
+
+  // Create a new FormData object to include the message and file data
   const formData = new FormData();
   formData.append("sender_id", sender_id);
   formData.append("chatroomID", chatroomID);
-  formData.append("message", "Please find the attachment below");
+  formData.append("message", message);
 
   // Append each file to the FormData object
   for (const file of files) {
     formData.append("attachment", file);
   }
 
-  
-    // Code to send the data to your backend API to send a new message
-    $.ajax({
-      url: `${baseurl}/admin/message-attachments`,
-      type: "POST",
-      data: formData,
-      dataType: "json",
-      headers: {
-        Authorization: "Bearer " + token, 
-      },
-      processData: false, // Prevent jQuery from processing the data
-    contentType: false, // Prevent jQuery from setting content type
-    success: function (response) {
+  // Code to send the data to your backend API to send a new message with attachments
+  fetch(`${baseurl}/admin/message-attachments`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to send message with attachment.");
+      }
+      return response.json();
+    })
+    .then((data) => {
       // Handle the success response
-      // Fetch chat room messages again to update the chat box with the new message
       fetchChatRoomMessages(chatroomID);
-    },
-    error: function (error) {
+
+      // Re-enable the "Send" button and change its text back to "Send"
+      sendMessageBtn.disabled = false;
+      sendMessageBtn.textContent = "Send";
+
+      // Clear the message input and file input after sending the message
+      messageInput.value = "";
+      const fileInput = document.getElementById("fileInput");
+      fileInput.value = "";
+      const selectedFilesDiv = document.getElementById("selectedFilesDiv");
+      selectedFilesDiv.textContent = "";
+    })
+    .catch((error) => {
       // Handle the error response
-      console.log("Failed to send message:", error);
-    },
-  });
+      console.error("Failed to send message with attachment:", error);
+
+      // Re-enable the "Send" button and change its text back to "Send"
+      sendMessageBtn.disabled = false;
+      sendMessageBtn.textContent = "Send";
+    });
 }
-  
-
-
 
 
 
 
 // Function to display the chat box for a specific chat room
 function displayChatBox(chatRoomID, chatRoomName) {
-    console.log(chatRoomName)
-    const chatBox = $(".chat-box");
-    chatBox.show();
+  console.log(chatRoomName);
+  const chatBox = $(".chat-box");
+  chatBox.show();
 
-    // const chatMessages = chatBox.find(".chat-messages");
-    // chatMessages.html(`<h3>${chatRoomName}</h3>`);
+  chatBox.find(".chat-room-name").text(chatRoomName);
 
-    // Set the chat room name at the top of the chat box
-chatBox.find(".chat-room-name").text(chatRoomName);
+  const chatMessages = chatBox.find(".chat-messages");
+  chatMessages.empty();
 
-const chatMessages = chatBox.find(".chat-messages");
+  // Fetch chat room messages for the selected chat room
+  fetchChatRoomMessages(chatRoomID);
 
-    // Clear the previous messages, if any
-    chatMessages.empty();
+  // Handle the "Send" button click event
+  $("#sendMessageBtn").off("click").on("click", function () {
+    const message = $("#messageInput").val().trim();
+    const files = $("#fileInput")[0].files; 
 
-    // Fetch chat room messages for the selected chat room
-    fetchChatRoomMessages(chatRoomID);
+    
+  // Check if the user entered a message and call the function to send the message with attachments
+  if (message !== "") {
+    sendAttachment(chatRoomID, files, message);
+  } else {
+    alert("Please enter a message before sending.");
+  }
+    handleSendMessage(chatRoomID, message, files);
 
-    // Handle the "Send" button click event
-    $("#sendMessageBtn")
-      .off("click")
-      .on("click", function () {
-        const message = $("#messageInput").val().trim();
-        if (message !== "") {
-          // Call the function to send the message
-          sendMessage(chatRoomID, message);
-          // Clear the message input after sending the message
-          $("#messageInput").val("");
-        }
-      });
-
- // Handle the "Send" button click event
- $("#sendMessageBtn").off("click").on("click", function () {
-    const files = $("#fileInput")[0].files;
-    console.log(files);
-  
-    // Call the function to send the message with attachments
-    sendAttachment(chatRoomID, files);
-  
-    // Clear the file input field and displayed file names after sending the message
+    // Clear the message input and file input after sending the message
+    $("#messageInput").val("");
     $("#fileInput").val("");
     $("#selectedFilesDiv").text("");
   });
+
+
   
 
   // Handle the "Close" button click event
@@ -483,59 +546,57 @@ const chatMessages = chatBox.find(".chat-messages");
 
   // Handle the "change" event of the file input
   $("#fileInput").on("change", function () {
-    // Get the selected files
     const files = $(this)[0].files;
     // Display the selected file names
-    const fileNames = Array.from(files).map(file => file.name).join(", ");
+    const fileNames = Array.from(files).map((file) => file.name).join(", ");
     $("#selectedFilesDiv").text(fileNames);
   });
-      
 
-      
-  // Attach keypress event listener to the message input field
-  $("#messageInput").on("keypress", function (event) {
-    // Check if the pressed key is Enter (keyCode 13)
-    if (event.keyCode === 13) {
-      // Prevent the default behavior (e.g., form submission)
-      event.preventDefault();
-      // Get the message content from the input field
-      const message = $(this).val().trim();
+
+$("#messageInput").on("keypress", function (event) {
+  // Check if the pressed key is Enter (keyCode 13)
+  if (event.keyCode === 13) {
+    // Prevent the default behavior (e.g., form submission)
+    event.preventDefault();
+    const message = $(this).val().trim();
+    const files = $("#fileInput")[0].files; // Assuming you have an input field for file selection with the ID "fileInput"
+
+    if (files.length > 0) {
+      // Call the function to send the message with attachments
+      sendAttachment(chatRoomID, files, message);
+      // Clear the message input and file input after sending the message
+      $(this).val("");
+      $("#fileInput").val("");
+      $("#selectedFilesDiv").text("");
+    } else {
+      // Check if the user entered a message before sending
       if (message !== "") {
-        // Get the chat room ID from your logic or data attributes
-        
-        // Call the function to send the message
+        // Call the function to send the regular text message
         sendMessage(chatRoomID, message);
         // Clear the message input after sending the message
         $(this).val("");
+      } else {
+        alert("Please enter a message before sending.");
       }
     }
-  });
-
-$("#messageInput").on("keypress", function (event) {
-    // Check if the pressed key is Enter (keyCode 13)
-    if (event.keyCode === 13) {
-      // Prevent the default behavior (e.g., form submission)
-      event.preventDefault();
-      const files = $("#fileInput")[0].files; // Assuming you have an input field for file selection with the ID "fileInput"
-  
-      if (files.length > 0) {
-        // Call the function to send the message with attachments
-        sendAttachment(chatRoomID, null, files); 
-        $("#fileInput").val(""); // Clear the file input field after sending the message
-      }
-    }
-  });
-  
-  
-
-
-    // Handle the "Close" button click event
-    $("#closeChatBox").on("click", function () {
-      chatBox.hide();
-    });
   }
+});
 
 
+
+
+}
+
+// Function to handle sending messages with attachments or regular text messages
+function handleSendMessage(chatRoomID, message, files) {
+  if (files.length > 0) {
+    // Call the function to send the message with attachments
+    sendAttachment(chatRoomID, message,files);
+  } else {
+    // Call the function to send the regular text message
+    sendMessage(chatRoomID, message);
+  }
+}
 
 // Attach click event handler to the chat rooms
 $(document).on("click", ".chat-rooms-list > div", function () {
@@ -544,9 +605,6 @@ $(document).on("click", ".chat-rooms-list > div", function () {
   displayChatBox(chatRoomID, chatRoomName);
 });
 
-
-
 // Fetch chat rooms on page load
 fetchChatRooms();
-
 
