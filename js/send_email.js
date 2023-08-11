@@ -76,7 +76,7 @@
       // const message = $('#message').val();
       const message = quill.getText(); 
       const attachments = $('#attachments')[0].files;
-  
+      
       // Get selected voters' email addresses
       const selectedVoters = $('input[name="selectedVoters"]:checked').map(function () {
         return this.value;
