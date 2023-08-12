@@ -1,15 +1,20 @@
         
         
-        
+    
         let quill;
-        // Function to initialize the Quill editor
         function initializeQuillEditor() {
           return new Quill('#message', {
-           
+            modules: {
+              toolbar: [
+                ['bold', 'italic', 'underline', 'strike'], // Add more options if needed
+                ['link', 'image'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              ],
+            },
             theme: 'snow'
           });
         }
-  
+        
   
   
   
@@ -73,8 +78,25 @@
       e.preventDefault();
       // Gather form data
       const subject = $('#subject').val();
-      // const message = $('#message').val();
-      const message = quill.getText(); 
+     
+      // const message = quill.root.innerHTML;
+      // const message = `
+      //     <div style="text-align: center; width: 75%;">
+      //       <img src="https://res.cloudinary.com/dpn5my0oj/image/upload/v1690890047/talented-teacher-logo_y1wwgs.png" alt="Your Logo" style="max-width: 100%;">
+      //     </div>
+      //     ${quill.root.innerHTML}
+      //   `;
+
+      const message = `
+  <div style="text-align: center;">
+    <div style="display: inline-block; width: 75%;">
+      <img src="https://res.cloudinary.com/dpn5my0oj/image/upload/v1690890047/talented-teacher-logo_y1wwgs.png" alt="Your Logo" style="max-width: 100%;">
+    </div>
+  </div>
+  ${quill.root.innerHTML}
+`;
+
+
       const attachments = $('#attachments')[0].files;
       
       // Get selected voters' email addresses
@@ -96,7 +118,7 @@
       const formData = new FormData();
       formData.append('sendTo', 'selected'); // Send to selected voters
       formData.append('subject', subject);
-      formData.append('text', message);
+      formData.append('html', message);
   
       for (let i = 0; i < attachments.length; i++) {
         formData.append('attachments', attachments[i]);
