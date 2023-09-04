@@ -130,6 +130,7 @@
                                             <th>Position</th>
                                             <th>Votes</th>
                                             <th>Group</th>
+                                            <th>Email Verified</th>
                                             <th>Joined because</th>
                                             
                                         </tr>
@@ -142,6 +143,7 @@
                                             <th>Position</th>
                                             <th>Votes</th>
                                             <th>Group</th>
+                                            <th>Email Verified</th>
                                             <th>Joined because</th>
                                             
                                            
@@ -346,11 +348,18 @@ function loadTeachersData(page) {
       totalRecords = response.totalCount;
       totalPages = response.totalPages;
       var hear_how1 = "";
+      var is_verified = 0;
       var tableBody = document.getElementById("dataTableBody");
       tableBody.innerHTML = ""; // Clear previous table data
 
       teachersData.forEach(function (teacher) {
         // console.log(teacher);
+        if(teacher.is_email_verified == 1){
+          is_verified = "Yes";
+        }
+        else{
+          is_verified = "No";
+        }
         if(teacher.hear_how == "Other"){
           hear_how1 = teacher.other_value;
         }
@@ -365,6 +374,7 @@ function loadTeachersData(page) {
           <td class="text-primary">${teacher.position}</td>
           <td class="text-primary">${teacher.vote_count}</td>
           <td class="text-primary">${teacher.group_id}</td>
+          <td class="text-primary">${is_verified}</td>
           <td class="text-primary">${hear_how1}</td>
         `;
         tableBody.appendChild(newRow);
