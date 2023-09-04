@@ -130,7 +130,7 @@
                                             <th>Position</th>
                                             <th>Votes</th>
                                             <th>Group</th>
-                                         
+                                            <th>Joined because</th>
                                             
                                         </tr>
                                     </thead>
@@ -142,6 +142,7 @@
                                             <th>Position</th>
                                             <th>Votes</th>
                                             <th>Group</th>
+                                            <th>Joined because</th>
                                             
                                            
                                             
@@ -344,11 +345,18 @@ function loadTeachersData(page) {
       var teachersData = response.teachers;
       totalRecords = response.totalCount;
       totalPages = response.totalPages;
-
+      var hear_how1 = "";
       var tableBody = document.getElementById("dataTableBody");
       tableBody.innerHTML = ""; // Clear previous table data
 
       teachersData.forEach(function (teacher) {
+        // console.log(teacher);
+        if(teacher.hear_how == "Other"){
+          hear_how1 = teacher.other_value;
+        }
+        else{
+          hear_how1 = teacher.hear_how;
+        }
         var newRow = document.createElement("tr");
         newRow.innerHTML = `
           <td class="text-capitalize text-primary pe-auto">${teacher.name}</td>
@@ -357,6 +365,7 @@ function loadTeachersData(page) {
           <td class="text-primary">${teacher.position}</td>
           <td class="text-primary">${teacher.vote_count}</td>
           <td class="text-primary">${teacher.group_id}</td>
+          <td class="text-primary">${hear_how1}</td>
         `;
         tableBody.appendChild(newRow);
       });
